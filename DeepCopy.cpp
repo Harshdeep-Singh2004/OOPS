@@ -1,28 +1,36 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
 class Deep {
 private:
-    int *p;
+    int* data;
+
 public:
-    Deep(int data) {
-        p = new int(data);
-    }
-    Deep(Deep &other) {
-        p = new int(*other.p);
+    Deep(int val) {
+        data = new int(val);
     }
 
-    void print() {
-        cout << "Address : " << p << endl;
+    // Custom copy constructor (deep copy)
+    Deep(const Deep& other) {
+        data = new int(*other.data);  // Allocate new memory & copy value
+    }
+
+    void display() const {
+        cout << "Value: " << *data << " (Address: " << data << ")" << endl;
+    }
+
+    ~Deep() {
+        cout << "Destructor freeing memory: " << data << endl;
+        delete data;
     }
 };
 
 int main() {
+    Deep obj1(20);
+    Deep obj2 = obj1;  // Deep copy (separate memory allocated)
 
-    Deep curr(10);
-    curr.print();
+    obj1.display();
+    obj2.display();  // Different addresses → independent copies
 
-    Deep nxt = curr;
-    nxt.print();
-
+    return 0;
 }
