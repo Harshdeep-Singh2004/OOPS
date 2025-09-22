@@ -1,61 +1,48 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
-// The main work of the runtime polymorphism is the function over-riding at the run-time
-
-class Payment {
+class Shape {
 public:
-    virtual void pay(double amount) = 0; // pure virtual → must be overridden
+    virtual void draw() = 0;  // Pure virtual function (interface)
 };
 
-class CreditCardPayment : public Payment {
+class Rectangle : public Shape {
 public:
-    void pay(double amount) {
-        cout << "Paid " << amount << " using Credit Card\n";
+    void draw() override {
+        cout << "Drawing a Rectangle\n";
     }
 };
 
-class PayPalPayment : public Payment {
+class Circle : public Shape {
 public:
-    void pay(double amount) {
-        cout << "Paid " << amount << " using PayPal\n";
+    void draw() override {
+        cout << "Drawing a Circle\n";
     }
 };
 
-class UpiPayment : public Payment {
+class Triangle : public Shape {
 public:
-    void pay(double amount) {
-        cout << "Paid " << amount << " using UPI\n";
+    void draw() override {
+        cout << "Drawing a Triangle\n";
     }
 };
-
-// When you use virtual:
-// Each class with virtual functions gets a hidden vtable (array of function pointers).
-// Each object stores a hidden pointer (vptr) to its class’s vtable.
-// At runtime, p->pay() looks up the correct function in the vtable.
-// When you don’t use virtual:
-// The compiler directly binds p->pay() to Payment::pay at compile time.
-// No vtable, no runtime check.
 
 int main() {
+    Shape* shape = nullptr;
 
-    double amount = 500.0;
-
-    Payment* p;  // base class pointer
-
-    // Imagine user selects payment method:
     int choice;
-    cout << "Select payment method: 1=CreditCard, 2=PayPal, 3=UPI\n";
+    cout << "Choose a shape (1=Rectangle, 2=Circle, 3=Triangle): ";
     cin >> choice;
 
-    if (choice == 1) p = new CreditCardPayment();
-    else if (choice == 2) p = new PayPalPayment();
-    else p = new UpiPayment();
+    if (choice == 1) shape = new Rectangle();
+    else if (choice == 2) shape = new Circle();
+    else if (choice == 3) shape = new Triangle();
 
-    p->pay(amount);  // dynamic binding → correct function called
+    // Same interface call → different behavior at runtime
+    if (shape) {
+        shape->draw();  // Resolved at runtime based on actual object
+        delete shape;
+    }
 
-    delete p;
     return 0;
-
-
 }
